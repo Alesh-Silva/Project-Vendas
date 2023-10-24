@@ -2,7 +2,7 @@ import os
 import datetime
 
 menu_vendas = ["Abrir Caixa", "Sair"]
-menu_abrir_caixa = ["Nova Venda","Novo Orçamento", "Retornar ao MENU", "Encerrar Caixa"]
+menu_abrir_caixa = ["Nova Venda","Novo Orçamento", "Encerrar Caixa"]
 menu_fechar_caixa = []
 S_N = ["Sim", "Não"]
 vendas_dia = []
@@ -37,8 +37,8 @@ def abrir_caixa():
         data_hora = datetime.datetime.now()
         data_hora_str = data_hora.strftime("%d/%m/%Y %H:%M")
         print(f"CAIXA ABERTO {data_hora_str}")
-        caixa_aberto = True
-        return caixa_aberto
+        
+        return True
     
 
 
@@ -66,10 +66,6 @@ if opcao == 1:
     #Novo Orçamento
     elif opcao_2 == 2:
         print("Novo Orçamento")
-    
-    #Retornar ao Menu
-    elif opcao_2 == 3:
-        print("retornar ao menu")
 
     #Encerrar caixa 
     elif opcao_2 == 4:
@@ -79,4 +75,3 @@ if opcao == 1:
 
 elif opcao == 2:
     print("Obrigado por utilizar o Gerentia")
-    
