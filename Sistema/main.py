@@ -49,32 +49,37 @@ def abrir_caixa():
 #                         PRINCIPAL
 #################################################################
 
+programa_rodando = True
 
-nova_tela("MENU VENDEDOR")
-opcao = imprime_opcoes(menu_vendas)
+while programa_rodando: 
+    '''Fiz um loop para o programa só sair quando '''
 
-
-#Menu principal
-if opcao == 1:
     nova_tela("MENU VENDEDOR")
-    abrir_caixa()
-
-    #Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
-    opcao_2 = imprime_opcoes(menu_abrir_caixa)
-    
-    #Nova venda
-    if opcao_2 == 1:
-        print("Nova Venda")
-    
-    #Novo Orçamento
-    elif opcao_2 == 2:
-        print("Novo Orçamento")
-
-    #Encerrar caixa 
-    elif opcao_2 == 4:
-        print("Encerrar caixa")
+    opcao = imprime_opcoes(menu_vendas)
 
 
+    #Menu principal
+    if opcao == 1:
+        nova_tela("MENU VENDEDOR")
+        abrir_caixa()
 
-elif opcao == 2:
-    print("Obrigado por utilizar o Gerentia")
+        #Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
+        opcao_2 = imprime_opcoes(menu_abrir_caixa)
+        
+        #Nova venda
+        if opcao_2 == 1:
+            print("Nova Venda")
+        
+        #Novo Orçamento
+        elif opcao_2 == 2:
+            print("Novo Orçamento")
+
+        #Encerrar caixa 
+        elif opcao_2 == 4:
+            print("Encerrar caixa")
+
+
+
+    elif opcao == 2:
+        print("Obrigado por utilizar o Gerentia")
+        programa_rodando =  False

@@ -7,4 +7,5 @@ import sqlite3
         id = d [0]
 
 class Database:
-    def __init__(self,)
+    def __init__(self):
+        pass
