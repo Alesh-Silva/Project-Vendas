@@ -1,16 +1,19 @@
 import os
 import datetime
+import time
 
 menu_vendas = ["Abrir Caixa", "Sair"]
 menu_abrir_caixa = ["Nova Venda","Novo Orçamento", "Encerrar Caixa"]
 menu_fechar_caixa = []
 S_N = ["Sim", "Não"]
 vendas_dia = []
+'''Limpa a tela '''
+def limpar_tela():
+    os.system("clear" or "cls") # primeiro tenta limpar a tela com system unix depois windows
 
-
-#Limpa tela e imprime cabeçalho com nome do parametro informado
+#imprime cabeçalho com nome do parametro informado
 def nova_tela(nome_cabecalho):
-    os.system("cls")
+    limpar_tela()
     print("="*38)
     print(f"             {nome_cabecalho}")
     print("="*38)
