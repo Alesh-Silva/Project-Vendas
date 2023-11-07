@@ -72,7 +72,7 @@ if opcao == 1:
         elif t_venda == 2:
             nova_tela("Venda Avulsa")    
             nome_produto = input("Nome do Produto: ")
-            valor = input("Valor: ")
+            valor = float(input("Valor: "))
 
     #Novo Orçamento
     elif opcao_2 == 2:
