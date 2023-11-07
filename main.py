@@ -1,12 +1,19 @@
 import os
 import datetime
 #from lib.funcoes import *
+from time import sleep
 
 menu_vendas = ["Abrir Caixa", "Sair"]
 menu_abrir_caixa = ["Nova Venda","Novo Orçamento","Gestão de Produtos", "Encerrar Caixa"]
 gestao_produtos= ["Adicionar Produto", "Remover Produto", "Editar Prduto"]
 S_N = ["Sim", "Não"]
 tipo_venda = ["Venda Simples", "Venda Avulsa"]
+
+#imprime uma mensagem indicando que a opção informada é inválida
+def opcao_invalida():
+    print("        OPÇÃO INVÁLIDA!!!")
+    print("Verifique as opções e tente novamente")
+
 
 #Limpa tela e imprime cabeçalho com nome do parametro informado
 def nova_tela(nome_cabecalho):
@@ -62,17 +69,25 @@ if opcao == 1:
     
     #Nova venda
     if opcao_2 == 1:
-        nova_tela("Nova Venda")
-        t_venda = imprime_opcoes(tipo_venda)
+        nova_venda = "SIM"
         
-        if t_venda == 1:
-            nova_tela("Venda Direta")
-            print("Produtos Cadastrados")
-        
-        elif t_venda == 2:
-            nova_tela("Venda Avulsa")    
-            nome_produto = input("Nome do Produto: ")
-            valor = float(input("Valor: "))
+        while nova_venda == "SIM" or nova_venda == "S":
+            nova_tela("Nova Venda")
+            t_venda = imprime_opcoes(tipo_venda)
+            
+            if t_venda == 1:
+                nova_tela("Venda Direta")
+                print("Produtos Cadastrados")
+            
+            elif t_venda == 2:
+                nova_tela("Venda Avulsa")    
+                nome_produto = input("Nome do Produto: ")
+                valor = float(input("Valor: "))
+
+                #Necessário implementar uma funçãoa que coloque os produtos
+                #vendidos dentro do banco de dados
+            
+            nova_venda = input("Deseja inserir um novo produto?").strip().upper()
 
     #Novo Orçamento
     elif opcao_2 == 2:
@@ -82,6 +97,7 @@ if opcao == 1:
     elif opcao_2 == 4:
         print("Encerrar caixa")
 
+
 elif opcao == 2:
     produtos = imprime_opcoes(gestao_produtos)
     
@@ -90,5 +106,9 @@ elif opcao == 2:
     elif produtos == 2:
         print("")
 
-elif opcao == 3:
+elif opcao == 2:
     print("Obrigado por utilizar o Gerentia")
+
+else:
+    opcao_invalida()
+
