@@ -3,7 +3,7 @@ import datetime
 import time
 
 menu_vendas = ["Abrir Caixa", "Sair"]
-menu_abrir_caixa = ["Nova Venda","Novo Orçamento", "Encerrar Caixa"]
+menu_abrir_caixa = ["Adicionar um novo produto","Novo Orçamento", "Encerrar Caixa","Nova venda"]
 menu_fechar_caixa = []
 S_N = ["Sim", "Não"]
 vendas_dia = []
@@ -34,7 +34,7 @@ def abrir_caixa():
     print("Deseja abrir um novo caixa?")
     confima_abertura =  imprime_opcoes(S_N)
     
-    if confima_abertura == 1:
+    if confima_abertura == 1:        
 
         nova_tela("MENU VENDEDOR")
         data_hora = datetime.datetime.now()
@@ -44,11 +44,6 @@ def abrir_caixa():
         return True
     
 
-
-#################################################################
-#                         PRINCIPAL
-#################################################################
-
 programa_rodando = True
 
 while programa_rodando: 
@@ -56,30 +51,38 @@ while programa_rodando:
 
     nova_tela("MENU VENDEDOR")
     opcao = imprime_opcoes(menu_vendas)
-
+ 
 
     #Menu principal
     if opcao == 1:
         nova_tela("MENU VENDEDOR")
-        abrir_caixa()
+        
 
         #Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
-        opcao_2 = imprime_opcoes(menu_abrir_caixa)
-        
-        #Nova venda
-        if opcao_2 == 1:
-            print("Nova Venda")
-        
-        #Novo Orçamento
-        elif opcao_2 == 2:
-            print("Novo Orçamento")
+        if abrir_caixa():
+                    # Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
+                    Caixa_aberto = imprime_opcoes(menu_abrir_caixa)
+                    
 
-        #Encerrar caixa 
-        elif opcao_2 == 4:
-            print("Encerrar caixa")
+            # Nova venda (somente se o caixa estiver aberto)
+                    if Caixa_aberto == 1:
+                        from conexão import *
+                        db = DataBase()
+                        db.get_items()
+                        time.sleep(3)
+                        limpar_tela()
+                        break
 
+                    # Novo Orçamento
+                    elif Caixa_aberto == 2:
+                        print("Novo Orçamento")
 
+                    # Nova venda
+                    elif Caixa_aberto == 4:
+                        print("Nova Venda")
 
-    elif opcao == 2:
-        print("Obrigado por utilizar o Gerentia")
-        programa_rodando =  False
+                    else:
+                        print("Obrigado por utilizar o Gerentia")
+                        programa_rodando = False
+else:
+    programa_rodando = False
