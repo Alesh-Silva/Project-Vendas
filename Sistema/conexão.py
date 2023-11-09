@@ -28,7 +28,7 @@ class DataBase:
         parameters = (name, preco, precoV, estoque, lucro)
         c.execute(sql, parameters)
         conn.commit()
-        print("Produto inserido com sucesso !!")
+        print("\033[93mProduto inserido com sucesso !!\033[0m")
 
 def get_max_id():
     result = c.execute('SELECT MAX(id) FROM inventory')

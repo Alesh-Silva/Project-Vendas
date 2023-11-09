@@ -3,7 +3,7 @@ import datetime
 import time
 
 menu_vendas = ["Abrir Caixa", "Sair"]
-menu_abrir_caixa = ["Adicionar um novo produto","Novo Orçamento", "Encerrar Caixa","Nova venda"]
+menu_abrir_caixa = ["\033[93mAdicionar um novo produto\033[0m","Novo Orçamento", "Encerrar Caixa","Nova venda"]
 menu_fechar_caixa = []
 S_N = ["Sim", "Não"]
 vendas_dia = []
@@ -36,7 +36,7 @@ def abrir_caixa():
     
     if confima_abertura == 1:        
 
-        nova_tela("MENU VENDEDOR")
+        nova_tela("\033[43mMENUR VENDEDOR\033[0m")
         data_hora = datetime.datetime.now()
         data_hora_str = data_hora.strftime("%d/%m/%Y %H:%M")
         print(f"CAIXA ABERTO {data_hora_str}")
@@ -71,7 +71,8 @@ while programa_rodando:
                         db.get_items()
                         time.sleep(3)
                         limpar_tela()
-                        break
+                        abrir_caixa()
+                      
 
                     # Novo Orçamento
                     elif Caixa_aberto == 2:
@@ -84,5 +85,7 @@ while programa_rodando:
                     else:
                         print("Obrigado por utilizar o Gerentia")
                         programa_rodando = False
+        else:
+             print("Caixa não está aberto")
 else:
     programa_rodando = False
