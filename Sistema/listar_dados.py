@@ -28,7 +28,8 @@ def buscar_produto_por_nome(nome):
 
     if data:
         for row in data:
-            print(f"ID: {row[0]}, Nome: {row[1]}, Preço de Compra: {row[2]}, Preço de Venda: {row[3]}, Estoque: {row[4]}, Lucro: {row[7]}")
+         print(f"ID: {row[0]}, Nome: \033[32m{row[1]}\033[0m, Preço de Compra: {row[2]}, Preço de Venda: {row[3]}, Estoque: {row[4]}, Lucro: {row[7]}")
+
     else:
         if nome:
             print(f"Produto com nome '{nome}' não encontrado.")
@@ -36,7 +37,7 @@ def buscar_produto_por_nome(nome):
             print("Nenhum produto encontrado.")
 
 # Exemplo de pesquisa por nome do produto
-nome_produto = input("Digite o nome do produto que deseja pesquisar (pressione Enter para mostrar todos :): ")
+nome_produto = input("Digite o nome do produto que deseja pesquisar (pressione Enter para mostrar todos :) ")
 buscar_produto_por_nome(nome_produto)
 
 # Fechar a conexão com o banco de dados

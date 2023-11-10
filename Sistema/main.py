@@ -1,6 +1,13 @@
 import os
 import datetime
 import time
+from vendas import Venda
+# importação do modulo vendas
+conn = None
+c = None
+
+def importar_vendas():
+    return Venda(conn, c) 
 
 menu_vendas = ["Abrir Caixa", "Sair"]
 menu_abrir_caixa = ["\033[93mAdicionar um novo produto\033[0m","Novo Orçamento", "Encerrar Caixa","Nova venda"]
@@ -45,47 +52,39 @@ def abrir_caixa():
     
 
 programa_rodando = True
+caixa_aberto = False
 
-while programa_rodando: 
-    '''Fiz um loop para o programa só sair quando '''
-
+while programa_rodando:
     nova_tela("MENU VENDEDOR")
     opcao = imprime_opcoes(menu_vendas)
- 
 
-    #Menu principal
     if opcao == 1:
         nova_tela("MENU VENDEDOR")
-        
 
-        #Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
-        if abrir_caixa():
-                    # Painel do vendedor (Vendas, orçamentos, encerrar caixa e sair)
-                    Caixa_aberto = imprime_opcoes(menu_abrir_caixa)
-                    
-
-            # Nova venda (somente se o caixa estiver aberto)
-                    if Caixa_aberto == 1:
-                        from conexão import *
-                        db = DataBase()
-                        db.get_items()
-                        time.sleep(3)
-                        limpar_tela()
-                        abrir_caixa()
-                      
-
-                    # Novo Orçamento
-                    elif Caixa_aberto == 2:
-                        print("Novo Orçamento")
-
-                    # Nova venda
-                    elif Caixa_aberto == 4:
-                        print("Nova Venda")
-
-                    else:
-                        print("Obrigado por utilizar o Gerentia")
-                        programa_rodando = False
+        if not caixa_aberto:
+            if abrir_caixa():
+                caixa_aberto = True
+                print("Caixa aberto com sucesso!")
+            else:
+                print("Caixa não aberto.")
         else:
-             print("Caixa não está aberto")
-else:
-    programa_rodando = False
+            Caixa_aberto = imprime_opcoes(menu_abrir_caixa)
+
+            if Caixa_aberto == 1:
+                if caixa_aberto:
+                    venda = importar_vendas()
+                    product_id = int(input("Digite o ID do produto que deseja vender:\n"))
+                    quantidade_venda = float(input("Digite a quantidade que deseja vender:\n"))
+                    venda.realizar_venda(product_id, quantidade_venda)
+                else:
+                    print("O caixa não está aberto. Abra o caixa antes de realizar uma venda.")
+            elif Caixa_aberto == 2:
+                print("Novo Orçamento")
+            elif Caixa_aberto == 3:
+                print("Encerrar Caixa")
+                caixa_aberto = False
+            elif Caixa_aberto == 4:
+                print("Nova Venda")
+            else:
+                print("Obrigado por utilizar o Gerentia")
+                programa_rodando = False
