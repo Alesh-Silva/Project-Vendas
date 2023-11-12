@@ -2,42 +2,52 @@ import subprocess
 import sys
 import platform
 import time
+import os
+
+def limpar_tela():
+    os.system('clear' if platform.system() == 'Linux' else 'cls')
+
+def criar_ambiente_virtual():
+    try:
+        subprocess.check_call([sys.executable, "-m", "venv", "venv"])
+        print("Ambiente virtual criado com sucesso.")
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao criar ambiente virtual: {e}")
 
 def instalar_pacotes():
     pacotes_necessarios = ["pwinput"]
     sistema_operacional = platform.system().lower()
-    amarelo = '\033[1;33m'; tag = '\033[m'
-    vermelho = '\033[1;31m';tag = '\033[m'
-
+    amarelo = '\033[1;33m'
+    tag = '\033[m'
+    vermelho = '\033[1;31m'
     reset = '\033[0m'
 
-    for pacote in pacotes_necessarios:
-        try:
-            subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
-            print(f"{pacote} instalado com sucesso.")
-        except subprocess.CalledProcessError as e:
-            if sistema_operacional == "linux":
-                print(amarelo,f"Erro ao instalar {pacotes_necessarios}. Sistema operacional Linux 🐧 detectado.")
-                time.sleep(4)
-                print(reset,"# 1 Crie um ambiente virtual:",vermelho, "python3 -m venv venv")
-                print(reset,"# 2 Ative o ambiente virtual:",vermelho,"source venv/bin/activate")
-                print(amarelo,"# 3 Rode novamente o programa ")
-                print(reset,"O erro que você está enfrentando indica que você está tentando \ninstalar pacotes globalmente no sistema e o ambiente Python parece ser externamente gerenciado.\nEm sistemas Linux, como o Ubuntu, você geralmente não deve instalar pacotes globalmente usando pip diretamente,\nPois isso pode interferir com o sistema operacional.")
-            else:
-                print(f"Erro ao instalar {pacote}: {e}")
+    if sistema_operacional != 'linux':
+        for pacote in pacotes_necessarios:
+            try:
+                subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
+                print(f"{pacote} instalado com sucesso.")
+            except subprocess.CalledProcessError as e:
+                limpar_tela()
+                print(f"{vermelho}Erro ao instalar {pacotes_necessarios}.")
+                print(f"Erro: {e}")
+    else:
+        limpar_tela()
+        print(f"Sistema operacional Linux 🐧 detectado.")
+        print(f"{amarelo}Criando ambiente virtual...{reset}")
+        criar_ambiente_virtual()
+
+        for pacote in pacotes_necessarios:
+            try:
+                subprocess.check_call(["./venv/bin/python", "-m", "pip", "install", pacote])
+                print(f"{pacote} instalado no ambiente virtual com sucesso.")
+            except subprocess.CalledProcessError as e:
+                print(f"Erro ao instalar {pacote} no ambiente virtual: {e}")
+
+        print(f"{reset}Ambiente virtual criado. Considere ativá-lo com 'source venv/bin/activate'.")
+        time.sleep(6)
+        limpar_tela()
+        
 
 if __name__ == "__main__":
     instalar_pacotes()
-
-
-
-# Em sistemas Linux, como o Ubuntu, você geralmente não 
-# deve instalar pacotes globalmente usando pip diretamente,
-# pois isso pode interferir com o sistema operacional.]
-# 1 Crie um ambiente virtual: python3 -m venv venv
-# 2 Ative o ambiente virtual: source venv/bin/activate
-# 3 depois python install_packages.py ou, rode o programa
-# lembre depois de apagar a pasta [venv] antes de fazer push para o git 👍
-
-
-
