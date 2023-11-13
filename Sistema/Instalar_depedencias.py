@@ -15,10 +15,9 @@ def criar_ambiente_virtual():
         print(f"Erro ao criar ambiente virtual: {e}")
 
 def instalar_pacotes():
-    pacotes_necessarios = ["pwinput"]
+    pacotes_necessarios = ["pwinput", "reportlab", "requests"]
     sistema_operacional = platform.system().lower()
     amarelo = '\033[1;33m'
-    tag = '\033[m'
     vermelho = '\033[1;31m'
     reset = '\033[0m'
 
@@ -28,8 +27,7 @@ def instalar_pacotes():
                 subprocess.check_call([sys.executable, "-m", "pip", "install", pacote])
                 print(f"{pacote} instalado com sucesso.")
             except subprocess.CalledProcessError as e:
-                limpar_tela()
-                print(f"{vermelho}Erro ao instalar {pacotes_necessarios}.")
+                print(f"{vermelho}Erro ao instalar {pacote}.{reset}")
                 print(f"Erro: {e}")
     else:
         limpar_tela()
@@ -42,12 +40,12 @@ def instalar_pacotes():
                 subprocess.check_call(["./venv/bin/python", "-m", "pip", "install", pacote])
                 print(f"{pacote} instalado no ambiente virtual com sucesso.")
             except subprocess.CalledProcessError as e:
-                print(f"Erro ao instalar {pacote} no ambiente virtual: {e}")
+                print(f"{vermelho}Erro ao instalar {pacote} no ambiente virtual.{reset}")
+                print(f"Erro: {e}")
 
-        print(f"{reset}Ambiente virtual criado. Considere ativá-lo com 'source venv/bin/activate'.")
+        print(f"Ambiente virtual criado. Considere ativá-lo com 'source venv/bin/activate'.")
         time.sleep(6)
         limpar_tela()
-        
 
 if __name__ == "__main__":
     instalar_pacotes()
