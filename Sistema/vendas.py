@@ -42,9 +42,22 @@ class Venda:
                     product_id, name, estoque_disponivel, preco_venda_unitario = result[0]
                     total_venda += self.realizar_venda_individual(product_id, name, estoque_disponivel, preco_venda_unitario, quantidade_venda)
                 else:
-                    print("Existem múltiplos produtos com o mesmo nome. Escolha o produto pelo ID:")
+                    print("\nExistem múltiplos produtos com o mesmo nome. Escolha o produto pelo ID:")
                     for product_id, name, estoque, precoV in result:
-                        print(f"ID: {product_id}, Nome: {name}, Estoque: {estoque}, Preço: {precoV}")
+                        # Verificar se os valores são nulos e substituir por uma string vazia
+                        id, nome, estoque, precoV = (
+                            "\033[32m" + f"ID: {product_id}" + "\033[0m" if product_id is not None else "",
+                            f"Nome: {name}" if name is not None else "",
+                            "\033[36m" + f"Estoque: {estoque}" + "\033[0m" if estoque is not None else "",
+                            "\033[33m" + f"Preço: R${precoV:.2f}" + "\033[0m" if precoV is not None else ""
+                        )
+                        # Imprimir dados formatados com cores e alinhamento
+                        print("\033[1m{:<5} {:<3} {:<10} {:<5}\033[0m".format(
+                            id, nome, estoque, precoV
+                        ))
+                    print()  # Adiciona uma linha em branco após os produtos
+
+
 
                     valid_id = False
                     while not valid_id:
@@ -81,9 +94,7 @@ def executar_vendas():
     total_venda = venda.realizar_venda()
 
     # Agora você pode usar 'total_venda' para exibir o total antes de pedir o pagamento
-    print(f"Total da venda: {total_venda}")
-
-    # Restante do código...
+    print(f"\033[33mTotal da venda: {total_venda}\033[0m")
 
     # Perguntar pelo método de pagamento apenas se houver uma venda
     if total_venda > 0:
