@@ -1,53 +1,51 @@
 import sqlite3
 
-try:
-    import sqlite3
-except ImportError:
-    print("Erro ao importar o módulo sqlite3")
-# Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
-conn = sqlite3.connect('Database/store.db')
-c = conn.cursor()
-
-
-class DataBase:
+class DatabaseManager:
     def __init__(self):
-        self.name_e = input("Qual o nome do produto?\n")
-        self.preco_e = float(input("Qual o valor de compra do produto?\n"))
-        self.estoque_e = float((input(f"Quantos {self.name_e} foram comprados ?\n")))
-        self.precoV_e = float(input(f"Qual valor de venda do produto {self.name_e}\n"))
+        try:
+            import sqlite3
+        except ImportError:
+            print("Erro ao importar o módulo sqlite3")
 
-    def get_items(self):
-        name = self.name_e
-        preco = self.preco_e
-        precoV = self.precoV_e
-        estoque = self.estoque_e
+        # Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
+        self.conn = sqlite3.connect('Database/store.db')
+        self.c = self.conn.cursor()
+
+    def create_product(self):
+        name = input("Qual o nome do produto?\n")
+        preco = float(input("Qual o valor de compra do produto?\n"))
+        estoque = float(input(f"Quantos {name} foram comprados?\n"))
+        precoV = float(input(f"Qual valor de venda do produto {name}\n"))
         lucro = (precoV * estoque) - (preco * estoque)
 
         # Inserir o nome e o preço na tabela 'inventory'
-        sql = "INSERT INTO inventory (name, precoC, precoV, estoque,lucro) VALUES (?, ?, ?, ?, ?)"
+        sql = "INSERT INTO inventory (name, precoC, precoV, estoque, lucro) VALUES (?, ?, ?, ?, ?)"
         parameters = (name, preco, precoV, estoque, lucro)
-        c.execute(sql, parameters)
-        conn.commit()
+        self.c.execute(sql, parameters)
+        self.conn.commit()
         print("\033[93mProduto inserido com sucesso !!\033[0m")
 
-def get_max_id():
-    result = c.execute('SELECT MAX(id) FROM inventory')
+    def get_max_id(self):
+        result = self.c.execute('SELECT MAX(id) FROM inventory')
 
-    for i in result:
-        id = i[0]
-        return id
+        for i in result:
+            id = i[0]
+            return id
 
-# Criar uma instância da classe DataBase
-db = DataBase()
+    def close_connection(self):
+        # Fechar a conexão com o banco de dados
+        self.conn.close()
 
-# Chamar o método get_items para inserir um produto
-db.get_items()
+if __name__ == "__main__":
+    # Criar uma instância da classe DatabaseManager
+    db_manager = DatabaseManager()
 
-# Obter o ID máximo após a inserção
-max_id = get_max_id()
-print(f"Produto {db.name_e}, foi inserido com ID : {max_id}°")
+    # Chamar o método create_product para inserir um produto
+    db_manager.create_product()
 
+    # Obter o ID máximo após a inserção
+    max_id = db_manager.get_max_id()
+    print(f"Produto foi inserido com ID : {max_id}°")
 
-
-# Fechar a conexão com o banco de dados
-conn.close()
+    # Fechar a conexão com o banco de dados
+    db_manager.close_connection()

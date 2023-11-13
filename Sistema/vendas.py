@@ -1,3 +1,5 @@
+# vendas.py
+
 import sqlite3
 
 class Venda:
@@ -58,76 +60,76 @@ class Venda:
 
         return total_venda
 
-# Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
-conn = sqlite3.connect('Database/store.db')
-c = conn.cursor()
+def executar_vendas():
+    # Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
+    conn = sqlite3.connect('Database/store.db')
+    c = conn.cursor()
 
-# Criar uma instância da classe Venda
-venda = Venda(conn, c)
+    venda = Venda(conn, c)
 
-while True:
-    produto_id_nome = input("Digite o ID ou o Nome do produto que deseja vender (ou 'não' para encerrar):\n")
+    while True:
+        produto_id_nome = input("Digite o ID ou o Nome do produto que deseja vender (ou 'não' para encerrar):\n")
 
-    if produto_id_nome.lower() == 'não':
-        break
+        if produto_id_nome.lower() == 'não':
+            break
 
-    quantidade_venda = float(input(f"Digite a quantidade de {produto_id_nome} que deseja vender:\n"))
+        quantidade_venda = float(input(f"Digite a quantidade de {produto_id_nome} que deseja vender:\n"))
 
-    venda.adicionar_produto(produto_id_nome, quantidade_venda)
+        venda.adicionar_produto(produto_id_nome, quantidade_venda)
 
-# Realizar a venda apenas no final, após adicionar todos os produtos
-total_venda = venda.realizar_venda()
+    # Realizar a venda apenas no final, após adicionar todos os produtos
+    total_venda = venda.realizar_venda()
 
-# Agora você pode usar 'total_venda' para exibir o total antes de pedir o pagamento
-print(f"Total da venda: {total_venda}")
+    # Agora você pode usar 'total_venda' para exibir o total antes de pedir o pagamento
+    print(f"Total da venda: {total_venda}")
 
-# Restante do código...
+    # Restante do código...
 
-# Perguntar pelo método de pagamento apenas se houver uma venda
-if total_venda > 0:
-    metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
+    # Perguntar pelo método de pagamento apenas se houver uma venda
+    if total_venda > 0:
+        metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
 
-    if metodo_pagamento == 'dinheiro':
-        valor_pago = float(input("Digite o valor pago: "))
-        troco = valor_pago - total_venda
-        if troco < 0:
-            print("\033[91mPagamento insuficiente. Venda não realizada.\033[0m")
+        if metodo_pagamento == 'dinheiro':
+            valor_pago = float(input("Digite o valor pago: "))
+            troco = valor_pago - total_venda
+            if troco < 0:
+                print("\033[91mPagamento insuficiente. Venda não realizada.\033[0m")
+            else:
+                print(f"\033[92mVenda realizada com sucesso!\033[0m")
+                print(f"Pagamento: {metodo_pagamento}, Troco: {troco}")
+        elif metodo_pagamento == 'cartao':
+            print("Cada \033[93mn\033[0m pacelas, aumenta em \033[93mn\033[0m por cento no valor do produto \n Exemplo: \033[93m10R$ em 10 pacelas é 11\033[0m")
+            cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n"))        
+            if cart > 10:
+                print("\033[91mNúmero de parcelas inválido. Venda não realizada.\033[0m")
+            else:
+                match cart:
+                    case 1:
+                        valor_pago = total_venda + (total_venda*0.01)
+                    case 2:
+                        valor_pago = total_venda + (total_venda*0.02)
+                    case 3:
+                        valor_pago = total_venda + (total_venda*0.03)
+                    case 4:
+                        valor_pago = total_venda + (total_venda*0.04)
+                    case 5:
+                        valor_pago = total_venda + (total_venda*0.05)
+                    case 6:
+                        valor_pago = total_venda + (total_venda*0.06)
+                    case 7:
+                        valor_pago = total_venda + (total_venda*0.07)
+                    case 8:
+                        valor_pago = total_venda + (total_venda*0.08)
+                    case 9:
+                        valor_pago = total_venda + (total_venda*0.09)
+                    case 10:
+                        valor_pago = total_venda + (total_venda*0.1)
+                
+                print(f"\033[92mVenda realizada com sucesso!\033[0m")
+                print(f"Pagamento: {metodo_pagamento}, Valor total: {valor_pago}")
         else:
             print(f"\033[92mVenda realizada com sucesso!\033[0m")
-            print(f"Pagamento: {metodo_pagamento}, Troco: {troco}")
-    elif metodo_pagamento == 'cartao':
-        print("Cada \033[93mn\033[0m pacelas, aumenta em \033[93mn\033[0m por cento no valor do produto \n Exemplo: \033[93m10R$ em 10 pacelas é 11\033[0m")
-        cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n"))        
-        if cart > 10:
-            print("\033[91mNúmero de parcelas inválido. Venda não realizada.\033[0m")
-        else:
-            match cart:
-                case 1:
-                    valor_pago = total_venda + (total_venda*0.01)
-                case 2:
-                    valor_pago = total_venda + (total_venda*0.02)
-                case 3:
-                    valor_pago = total_venda + (total_venda*0.03)
-                case 4:
-                    valor_pago = total_venda + (total_venda*0.04)
-                case 5:
-                    valor_pago = total_venda + (total_venda*0.05)
-                case 6:
-                    valor_pago = total_venda + (total_venda*0.06)
-                case 7:
-                    valor_pago = total_venda + (total_venda*0.07)
-                case 8:
-                    valor_pago = total_venda + (total_venda*0.08)
-                case 9:
-                    valor_pago = total_venda + (total_venda*0.09)
-                case 10:
-                    valor_pago = total_venda + (total_venda*0.1)
-            
-            print(f"\033[92mVenda realizada com sucesso!\033[0m")
-            print(f"Pagamento: {metodo_pagamento}, Valor total: {valor_pago}")
-    else:
-        print(f"\033[92mVenda realizada com sucesso!\033[0m")
-        print(f"Pagamento: {metodo_pagamento}")
+            print(f"Pagamento: {metodo_pagamento}")
 
-# Fechar a conexão com o banco de dados
-conn.close()
+    # Fechar a conexão com o banco de dados
+    conn.close()
