@@ -17,13 +17,31 @@ def buscar_produto(conn, nome):
     data = c.fetchall()
 
     if data:
+        # Imprimir cabeçalho com cores
+        print("\033[1m{:<12} {:<17} {:<15} {:<17} {:<13} {:<10}\033[0m".format(
+            "ID", "Nome", "Preço Compra", "Preço Venda", "Estoque", "Lucro"
+        ))
+        print("\033[34m" + "="*120 + "\033[0m")  # Linha divisória azul
+
         for row in data:
-            print(f"ID: {row[0]}, Nome: \033[32m{row[1]}\033[0m, Preço de Compra: {row[2]}, Preço de Venda: {row[3]}, Estoque: {row[4]}, Lucro: {row[7]}")
+            # Verificar se os valores são nulos e substituir por uma string vazia
+            id, nome, preco_c, preco_v, estoque, lucro = (
+                "\033[32m" + str(row[0]) + "\033[0m" if row[0] is not None else "",
+                row[1] if row[1] is not None else "",
+                "\033[33m" + f"R${row[2]:<14,.2f}" + "\033[0m" if row[2] is not None else "",
+                "\033[33m" + f"R${row[3]:<14,.2f}" + "\033[0m" if row[3] is not None else "",
+                "\033[36m" + str(row[4]) + "\033[0m" if row[4] is not None else "",
+                "\033[32m" + f"R${row[7]:<14,.2f}" + "\033[0m" if row[7] is not None else ""
+            )
+            # Imprimir dados formatados com cores e alinhamento
+            print("\033[1m{:<20} {:<20} {:<20} {:<20} {:<20} {:<20}\033[0m".format(
+                id, nome, preco_c, preco_v, estoque, lucro
+            ))
     else:
         if nome:
-            print(f"Produto com nome '{nome}' não encontrado.")
+            print(f"\033[91mProduto com nome '{nome}' não encontrado.\033[0m")
         else:
-            print("Nenhum produto encontrado.")
+            print("\033[91mNenhum produto encontrado.\033[0m")
     
     c.close()
 
