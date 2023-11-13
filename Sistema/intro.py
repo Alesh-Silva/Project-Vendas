@@ -27,7 +27,7 @@ def mostrar_logo(nome, cor):
 
 ###usando system cls
 for i in range(0, len(string)): #escrevendo nome
-    mostrar_logo(string[0:i], '')
+    mostrar_logo(string[0:i], amarelo)
     if string[i] != ' ':
         sleep(0.1)
     else:
