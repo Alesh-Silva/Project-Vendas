@@ -5,7 +5,7 @@ import datetime
 import platform
 import os
 import sqlite3
-#import intro
+import intro
 import time
 def limpar_tela():
     os.system('clear' if platform.system() == 'Linux' else 'cls')    
