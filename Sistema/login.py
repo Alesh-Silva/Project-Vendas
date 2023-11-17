@@ -1,5 +1,5 @@
 import sqlite3
-
+import pwinput
 class Login:
     def __init__(self):
         try:
@@ -12,7 +12,7 @@ class Login:
 
     def verificacao(self):
         user = input("User:")
-        senha = input("Senha:")
+        senha = pwinput.pwinput("Senha:")
 
         if user and senha:
             # Use uma consulta parametrizada para evitar SQL injection

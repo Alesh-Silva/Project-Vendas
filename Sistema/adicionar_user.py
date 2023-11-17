@@ -1,5 +1,7 @@
 import sqlite3
-
+import pwinput
+from getpass import getpass # Apenas oculta as senhas digitadas no terminal 
+from datetime import datetime
 class DatabaseManager:
     def __init__(self):
         try:
@@ -14,9 +16,11 @@ class DatabaseManager:
     def adicionar_user(self):
         nomeC = input("Qual o nome do novo funcionário?\n")
         cpf = int(input(f"Qual o cpf do(a) {nomeC}?\n"))
-        idade = int(input(f"Quanto anos o(a) {nomeC} tem ?\n"))
+        anoNascimento = int(input(f"Qual ano o {nomeC} nasceu ?\n"))
+        ano_atual = datetime.now().year
+        idade =  ano_atual - anoNascimento
         user = input(f"Qual o user do {nomeC}\n")
-        senha = (input(f"Qual a senha do {user}: \n"))
+        senha = pwinput.pwinput(f"Qual a senha do {user}: \n")
 
         # Inserir o nome e o preço na tabela 'inventory'
         sql = "INSERT INTO login (nomeC, cpf, idade, user, senha) VALUES (?, ?, ?, ?, ?)"
