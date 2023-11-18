@@ -15,7 +15,7 @@ def criar_ambiente_virtual():
         print(f"Erro ao criar ambiente virtual: {e}")
 
 def instalar_pacotes():
-    pacotes_necessarios = ["pwinput", "reportlab", "requests"]
+    pacotes_necessarios = ["pwinput", "reportlab", "requests","Pillow"]
     sistema_operacional = platform.system().lower()
     amarelo = '\033[1;33m'
     vermelho = '\033[1;31m'
@@ -44,7 +44,7 @@ def instalar_pacotes():
                 print(f"Erro: {e}")
 
         print(f"Ambiente virtual criado. Considere ativá-lo com 'source venv/bin/activate'.")
-        time.sleep(6)
+        time.sleep(70)
         limpar_tela()
 
 if __name__ == "__main__":

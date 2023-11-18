@@ -1,6 +1,8 @@
-# vendas.py
-
 import sqlite3
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from datetime import datetime
+from PIL import Image
 
 class Venda:
     def __init__(self, conn, c):
@@ -30,6 +32,40 @@ class Venda:
             print("\033[91mEstoque insuficiente para realizar a venda.\033[0m")
             return 0
 
+    def criar_nota_fiscal_pdf(self, total_venda, metodo_pagamento):
+        # Obter a data e hora atual
+        data_hora = datetime.now().strftime("%d-%m-%Y %H:%M")
+
+        # Criar um arquivo PDF
+        pdf = canvas.Canvas(f"Notas_Fiscais/Nota_Fiscal_{data_hora}.pdf", pagesize=letter)
+
+        # Adicionar informações à nota fiscal
+        pdf.setFont('Helvetica', 12)  # Usando a fonte padrão 'Helvetica'
+        pdf.drawString(100, 700, "Nota Fiscal")
+        pdf.drawString(100, 680, f"Data e Hora: {data_hora}")
+
+        for produto_id_nome, quantidade_venda in self.produtos_venda:
+            self.c.execute("SELECT name, precoV FROM inventory WHERE id=? OR name=?", (produto_id_nome, produto_id_nome))
+            result = self.c.fetchone()
+            if result:
+                name, preco_unitario = result
+                pdf.drawString(100, 660, f"Produto: {name}")
+                pdf.drawString(100, 640, f"Quantidade: {quantidade_venda}")
+                pdf.drawString(100, 620, f"Preço unitário: R${preco_unitario:.2f}")
+                pdf.drawString(100, 600, f"Total: R${quantidade_venda * preco_unitario:.2f}")
+
+        pdf.drawString(100, 580, f"Método de Pagamento: {metodo_pagamento}")
+        qrcode_path = "img/qrcode-pix.png"  
+        pdf.drawInlineImage(qrcode_path,500, 50, width=100, height=100)
+        qrcodeo2_path = "img/codbarras.png"  
+        pdf.drawInlineImage(qrcodeo2_path, 150, 400, width=300, height=150)
+        qrcodeo3_path = "img/icon_lampada.png"  
+        pdf.drawInlineImage(qrcodeo3_path, 500, 500, width=300, height=150)
+
+
+        # Salvar o arquivo PDF
+        pdf.save()
+
     def realizar_venda(self):
         total_venda = 0
 
@@ -57,8 +93,6 @@ class Venda:
                         ))
                     print()  # Adiciona uma linha em branco após os produtos
 
-
-
                     valid_id = False
                     while not valid_id:
                         chosen_id = int(input("Digite o ID do produto desejado: "))
@@ -71,13 +105,68 @@ class Venda:
             else:
                 print(f"\033[91mProduto com ID ou Nome {produto_id_nome} não encontrado.\033[0m")
 
-        return total_venda
+        # Agora você pode usar 'total_venda' para exibir o total antes de pedir o pagamento
+        print(f"\033[33mTotal da venda: {total_venda}\033[0m")
 
+        # Perguntar pelo método de pagamento apenas se houver uma venda
+        if total_venda > 0:
+            metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
+
+            if metodo_pagamento == 'dinheiro':
+                valor_pago = float(input("Digite o valor pago: "))
+                troco = valor_pago - total_venda
+                if troco < 0:
+                    print("\033[91mPagamento insuficiente. Venda não realizada.\033[0m")
+                else:
+                    print(f"\033[92mVenda realizada com sucesso!\033[0m")
+                    print(f"Pagamento: {metodo_pagamento}, Troco: {troco}")
+                    # Chamar o método para criar a nota fiscal em PDF
+                    self.criar_nota_fiscal_pdf(total_venda, metodo_pagamento)
+            elif metodo_pagamento == 'cartao':
+                print("Cada \033[93mn\033[0m pacelas, aumenta em \033[93mn\033[0m por cento no valor do produto \n Exemplo: \033[93m10R$ em 10 pacelas é 11\033[0m")
+                cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n"))        
+                if cart > 10:
+                    print("\033[91mNúmero de parcelas inválido. Venda não realizada.\033[0m")
+                else:
+                    match cart:
+                        case 1:
+                            valor_pago = total_venda + (total_venda*0.01)
+                        case 2:
+                            valor_pago = total_venda + (total_venda*0.02)
+                        case 3:
+                            valor_pago = total_venda + (total_venda*0.03)
+                        case 4:
+                            valor_pago = total_venda + (total_venda*0.04)
+                        case 5:
+                            valor_pago = total_venda + (total_venda*0.05)
+                        case 6:
+                            valor_pago = total_venda + (total_venda*0.06)
+                        case 7:
+                            valor_pago = total_venda + (total_venda*0.07)
+                        case 8:
+                            valor_pago = total_venda + (total_venda*0.08)
+                        case 9:
+                            valor_pago = total_venda + (total_venda*0.09)
+                        case 10:
+                            valor_pago = total_venda + (total_venda*0.1)
+                    
+                    print(f"\033[92mVenda realizada com sucesso!\033[0m")
+                    print(f"Pagamento: {metodo_pagamento}, Valor total: {valor_pago}")
+                    # Chamar o método para criar a nota fiscal em PDF
+                    self.criar_nota_fiscal_pdf(total_venda, metodo_pagamento)
+            else:
+                print(f"\033[92mVenda realizada com sucesso!\033[0m")
+                print(f"Pagamento: {metodo_pagamento}")
+                # Chamar o método para criar a nota fiscal em PDF
+                self.criar_nota_fiscal_pdf(total_venda, metodo_pagamento)
+
+# Função para executar as vendas
 def executar_vendas():
     # Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
     conn = sqlite3.connect('Database/store.db')
     c = conn.cursor()
 
+    # Criar uma instância da classe Venda
     venda = Venda(conn, c)
 
     while True:
@@ -88,59 +177,14 @@ def executar_vendas():
 
         quantidade_venda = float(input(f"Digite a quantidade de {produto_id_nome} que deseja vender:\n"))
 
+        # Adicionar o produto à lista de produtos da venda
         venda.adicionar_produto(produto_id_nome, quantidade_venda)
 
     # Realizar a venda apenas no final, após adicionar todos os produtos
     total_venda = venda.realizar_venda()
 
-    # Agora você pode usar 'total_venda' para exibir o total antes de pedir o pagamento
-    print(f"\033[33mTotal da venda: {total_venda}\033[0m")
-
-    # Perguntar pelo método de pagamento apenas se houver uma venda
-    if total_venda > 0:
-        metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
-
-        if metodo_pagamento == 'dinheiro':
-            valor_pago = float(input("Digite o valor pago: "))
-            troco = valor_pago - total_venda
-            if troco < 0:
-                print("\033[91mPagamento insuficiente. Venda não realizada.\033[0m")
-            else:
-                print(f"\033[92mVenda realizada com sucesso!\033[0m")
-                print(f"Pagamento: {metodo_pagamento}, Troco: {troco}")
-        elif metodo_pagamento == 'cartao':
-            print("Cada \033[93mn\033[0m pacelas, aumenta em \033[93mn\033[0m por cento no valor do produto \n Exemplo: \033[93m10R$ em 10 pacelas é 11\033[0m")
-            cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n"))        
-            if cart > 10:
-                print("\033[91mNúmero de parcelas inválido. Venda não realizada.\033[0m")
-            else:
-                match cart:
-                    case 1:
-                        valor_pago = total_venda + (total_venda*0.01)
-                    case 2:
-                        valor_pago = total_venda + (total_venda*0.02)
-                    case 3:
-                        valor_pago = total_venda + (total_venda*0.03)
-                    case 4:
-                        valor_pago = total_venda + (total_venda*0.04)
-                    case 5:
-                        valor_pago = total_venda + (total_venda*0.05)
-                    case 6:
-                        valor_pago = total_venda + (total_venda*0.06)
-                    case 7:
-                        valor_pago = total_venda + (total_venda*0.07)
-                    case 8:
-                        valor_pago = total_venda + (total_venda*0.08)
-                    case 9:
-                        valor_pago = total_venda + (total_venda*0.09)
-                    case 10:
-                        valor_pago = total_venda + (total_venda*0.1)
-                
-                print(f"\033[92mVenda realizada com sucesso!\033[0m")
-                print(f"Pagamento: {metodo_pagamento}, Valor total: {valor_pago}")
-        else:
-            print(f"\033[92mVenda realizada com sucesso!\033[0m")
-            print(f"Pagamento: {metodo_pagamento}")
-
     # Fechar a conexão com o banco de dados
     conn.close()
+
+# Exemplo de uso
+executar_vendas()
