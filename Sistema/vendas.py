@@ -59,8 +59,7 @@ class Venda:
         pdf.drawInlineImage(qrcode_path,500, 50, width=100, height=100)
         qrcodeo2_path = "img/codbarras.png"  
         pdf.drawInlineImage(qrcodeo2_path, 150, 400, width=300, height=150)
-        qrcodeo3_path = "img/icon_lampada.png"  
-        pdf.drawInlineImage(qrcodeo3_path, 500, 500, width=300, height=150)
+       
 
 
         # Salvar o arquivo PDF
