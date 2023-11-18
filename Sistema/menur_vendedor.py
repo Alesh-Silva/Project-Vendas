@@ -1,3 +1,4 @@
+'''antigo main - agora é menur vendedor'''
 from vendas import executar_vendas
 from listar_dados import buscar_produto
 from adicionar_prod import DatabaseManager
@@ -5,7 +6,7 @@ import datetime
 import platform
 import os
 import sqlite3
-import intro
+#import intro
 import time
 def limpar_tela():
     os.system('clear' if platform.system() == 'Linux' else 'cls')    
@@ -51,5 +52,3 @@ def main():
     # Fechar a conexão com o banco de dados
     conn.close()
 
-if __name__ == "__main__":
-    main()

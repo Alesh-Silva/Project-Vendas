@@ -186,4 +186,4 @@ def executar_vendas():
     conn.close()
 
 # Exemplo de uso
-executar_vendas()
+#executar_vendas()

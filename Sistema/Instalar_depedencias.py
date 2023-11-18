@@ -44,7 +44,7 @@ def instalar_pacotes():
                 print(f"Erro: {e}")
 
         print(f"Ambiente virtual criado. Considere ativá-lo com 'source venv/bin/activate'.")
-        time.sleep(70)
+        time.sleep(6)
         limpar_tela()
 
 if __name__ == "__main__":
