@@ -9,6 +9,7 @@ class Venda:
         self.conn = conn
         self.c = c
         self.produtos_venda = []
+        self.cart = None
 
     def adicionar_produto(self, produto_id_nome, quantidade_venda):
         self.produtos_venda.append((produto_id_nome, quantidade_venda))
@@ -40,25 +41,47 @@ class Venda:
         pdf = canvas.Canvas(f"Notas_Fiscais/Nota_Fiscal_{data_hora}.pdf", pagesize=letter)
 
         # Adicionar informações à nota fiscal
-        pdf.setFont('Helvetica', 12)  # Usando a fonte padrão 'Helvetica'
-        pdf.drawString(100, 700, "Nota Fiscal")
-        pdf.drawString(100, 680, f"Data e Hora: {data_hora}")
+       
+        pdf.setFont('Courier-Bold', 14)
+        pdf.drawString(220, 770, "Nota Fiscal")
+        pdf.setFont('Courier-Bold', 12)
+        pdf.drawString(130, 750, f"Data e Hora: {data_hora} da Compra")
+        if metodo_pagamento =='cartao':
+            pdf.drawString(130, 730, f"Valor Total Pago: R${total_venda} em {self.cart} vezes no {metodo_pagamento.upper()}")
+        else:
+             pdf.drawString(130, 730, f"Valor Total Pago: R${total_venda} no{metodo_pagamento}")
 
+        y_coord = 700  # Coordenada Y inicial
         for produto_id_nome, quantidade_venda in self.produtos_venda:
             self.c.execute("SELECT name, precoV FROM inventory WHERE id=? OR name=?", (produto_id_nome, produto_id_nome))
             result = self.c.fetchone()
             if result:
                 name, preco_unitario = result
-                pdf.drawString(100, 660, f"Produto: {name}")
-                pdf.drawString(100, 640, f"Quantidade: {quantidade_venda}")
-                pdf.drawString(100, 620, f"Preço unitário: R${preco_unitario:.2f}")
-                pdf.drawString(100, 600, f"Total: R${quantidade_venda * preco_unitario:.2f}")
+                pdf.setFont('Courier-Bold', 8)
+                pdf.drawString(220, y_coord, f"Produto: {name}")
+                pdf.drawString(220, y_coord - 12, f"Quantidade: {quantidade_venda}")
+                pdf.drawString(220, y_coord - 24, f"Preço Unitário: R${preco_unitario:.2f}")
+                if metodo_pagamento == 'cartao':
+                    pdf.drawString(220, y_coord - 36, f"Valor Total Pago: R${quantidade_venda*preco_unitario}")
+                    pdf.drawString(220, y_coord - 48, f"Método de pagamento {metodo_pagamento.upper()}")
+                    pdf.drawString(0, y_coord - 53, "...............................................................................................................................................................................")
+                else:
+                    pdf.drawString(220, y_coord - 36 , f"Valor Total Pago: R${quantidade_venda*preco_unitario}")
+                    pdf.drawString(220, y_coord - 48, f"Método de Pagamento: {metodo_pagamento.upper()}")
+                    pdf.drawString(0, y_coord - 53, "...............................................................................................................................................................................")
 
-        pdf.drawString(100, 580, f"Método de Pagamento: {metodo_pagamento}")
+                
+                y_coord -= 59  # Diminuir a coordenada Y para o próximo produto
+                pdf.drawString(200, 83, f"Código de Barras:")
+                
+        icon = "img/icon_lampada.png"  
+        pdf.drawInlineImage(icon, 500, 693, width=100, height=100)          
+        seguranca = "img/seguranca.png"  
+        pdf.drawInlineImage(seguranca, 100, 120, width=420, height=210)
         qrcode_path = "img/qrcode-pix.png"  
-        pdf.drawInlineImage(qrcode_path,500, 50, width=100, height=100)
+        pdf.drawInlineImage(qrcode_path,510, 10, width=100, height=100)
         qrcodeo2_path = "img/codbarras.png"  
-        pdf.drawInlineImage(qrcodeo2_path, 150, 400, width=300, height=150)
+        pdf.drawInlineImage(qrcodeo2_path, 15, 12, width=480, height=60)  
        
 
 
@@ -110,6 +133,9 @@ class Venda:
         # Perguntar pelo método de pagamento apenas se houver uma venda
         if total_venda > 0:
             metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
+            while metodo_pagamento not in ['dinheiro', 'cartao']:
+                print("Digite \033[93mdinheiro\033[0m ou \033[93mcartao\033[0m")
+                metodo_pagamento = input("Digite o método de pagamento (Dinheiro, Cartão, etc.): ").strip().lower()
 
             if metodo_pagamento == 'dinheiro':
                 valor_pago = float(input("Digite o valor pago: "))
@@ -123,7 +149,8 @@ class Venda:
                     self.criar_nota_fiscal_pdf(total_venda, metodo_pagamento)
             elif metodo_pagamento == 'cartao':
                 print("Cada \033[93mn\033[0m pacelas, aumenta em \033[93mn\033[0m por cento no valor do produto \n Exemplo: \033[93m10R$ em 10 pacelas é 11\033[0m")
-                cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n"))        
+                cart = int(input("Digite a quantidade de pacelas, com no máximo \033[93m[ 10 ]\033[0m\n")) 
+                self.cart = cart       
                 if cart > 10:
                     print("\033[91mNúmero de parcelas inválido. Venda não realizada.\033[0m")
                 else:
@@ -185,5 +212,4 @@ def executar_vendas():
     # Fechar a conexão com o banco de dados
     conn.close()
 
-# Exemplo de uso
 #executar_vendas()
