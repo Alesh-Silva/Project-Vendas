@@ -1,6 +1,8 @@
 import sqlite3
 import pwinput
 from menur_vendedor import main
+from menur_adm import main_adm
+from intro import *
 import time
 import os
 import platform
@@ -37,13 +39,16 @@ class Login:
                     cargo = resultado_cargo[0]
 
                     if cargo == 'ADM':
-                        print("O usuário tem cargo de administrador.")
-                        # Exibir mensagem específica para ADM
-                        print("Bem-vindo ao sistema de administrador!")
-                    elif cargo == 'FUNC':
-                        print(f"O {user} tem cargo de funcionário.")   #o user só está aqui para quando o user fizer login, vai abrir o sistema com base em seu cargo                     
+                        print(f"O {user} tem cargo de Administrador.")   #o user só está aqui para quando o user fizer login, vai abrir o sistema com base em seu cargo                     
                         time.sleep(3)
                         limpar_tela()
+                        iniciar_intro()
+                        main_adm()
+                    elif cargo == 'FUNC':
+                        print(f"O {user} tem cargo de Funcionário.")   #o user só está aqui para quando o user fizer login, vai abrir o sistema com base em seu cargo                     
+                        time.sleep(3)
+                        limpar_tela()
+                        iniciar_intro()
                         main()
                         # Abrir o main que está na pasta Sistema
                         # Substitua o comando abaixo pelo que você precisa para abrir o main

@@ -2,16 +2,21 @@
 from vendas import executar_vendas
 from listar_dados import buscar_produto
 from adicionar_prod import DatabaseManager
+from ADM_user import *
+from adicionar_user import *
 
 import datetime
 import platform
 import os
 import sqlite3
+
 import time
 def limpar_tela():
-    os.system('clear' if platform.system() == 'Linux' else 'cls')    
+    os.system('clear' if platform.system() == 'Linux' else 'cls')
+   
 
 def cabecalho():
+    
     data_hora = datetime.datetime.now()
     data_hora_str = data_hora.strftime("\033[1;33m%d/%m/%Y %H:%M\033[m")
     print("----- Sistema de Vendas -----")
@@ -19,12 +24,15 @@ def cabecalho():
     print("1. Realizar Venda")
     print("2. Lista produtos cadastrados")
     print("3. Cadastrar Produto")
-    print("4. Sair")
+    print("4. Listar Funcionários e Modifcar User")
+    print("5. Cadastrar Novo Funcionário")
+    print("6. Sair")
 
 
-def main():
-    # Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
+def main_adm():
     conn = sqlite3.connect('Database/store.db')
+    db_manager = DatabaseManager()
+    db_manager_adm = ADM_USER()
 
     while True:
         cabecalho()
@@ -43,12 +51,23 @@ def main():
             time.sleep(5)
             limpar_tela()
         elif opcao == '4':
+            #db_manager_adm.listar_usuarios() # Lista todos os dados dos funcionários cadastradados
+            db_manager_adm.modificar_usuario_interativo()
+            time.sleep(5)
+            limpar_tela()                
+           
+        elif opcao == '5':
+            db_manager.adicionar_user()
+            time.sleep(5)
+            limpar_tela()
+        elif opcao == '6':
             print("Saindo do sistema. Até mais!")
             break
          
         else:
             print("Opção inválida. Tente novamente.")
+            volta = input("Digite quallquer tecla para voltar")
 
     # Fechar a conexão com o banco de dados
     conn.close()
-
+#main_adm()

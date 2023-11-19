@@ -54,4 +54,4 @@ class DatabaseManager:
 db_manager = DatabaseManager()
 
 # Exemplo de chamada da função
-db_manager.adicionar_user()
+#db_manager.adicionar_user()

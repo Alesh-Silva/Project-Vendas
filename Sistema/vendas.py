@@ -49,7 +49,7 @@ class Venda:
         if metodo_pagamento =='cartao':
             pdf.drawString(130, 730, f"Valor Total Pago: R${total_venda} em {self.cart} vezes no {metodo_pagamento.upper()}")
         else:
-             pdf.drawString(130, 730, f"Valor Total Pago: R${total_venda} no{metodo_pagamento}")
+             pdf.drawString(130, 730, f"Valor Total Pago: R${total_venda} no {metodo_pagamento.upper()}")
 
         y_coord = 700  # Coordenada Y inicial
         for produto_id_nome, quantidade_venda in self.produtos_venda:
