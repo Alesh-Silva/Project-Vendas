@@ -3,6 +3,7 @@ from vendas import executar_vendas
 from listar_dados import buscar_produto
 from adicionar_prod import DatabaseManager
 
+
 import datetime
 import platform
 import os
@@ -22,7 +23,7 @@ def cabecalho():
     print("4. Sair")
 
 
-def main():
+def main_vend():
     # Conectar ao banco de dados ou criar um novo arquivo de banco de dados se ele não existir
     conn = sqlite3.connect('Database/store.db')
 
@@ -44,10 +45,17 @@ def main():
             limpar_tela()
         elif opcao == '4':
             print("Saindo do sistema. Até mais!")
-            break
+            time.sleep(3)
+            from login import Login
+            login_obj = Login()
+            login_obj.verificacao()
+            break  # Sai do loop principal quando o usuário sai do sistema
+            
+            
          
         else:
             print("Opção inválida. Tente novamente.")
+            
 
     # Fechar a conexão com o banco de dados
     conn.close()

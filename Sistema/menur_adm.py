@@ -10,7 +10,6 @@ import platform
 import os
 import sqlite3
 
-import time
 def limpar_tela():
     os.system('clear' if platform.system() == 'Linux' else 'cls')
    
@@ -62,7 +61,11 @@ def main_adm():
             limpar_tela()
         elif opcao == '6':
             print("Saindo do sistema. Até mais!")
-            break
+            time.sleep(3)
+            from login import Login
+            login_obj = Login()
+            login_obj.verificacao()
+            break  # Sai do loop principal quando o usuário sai do sistema
          
         else:
             print("Opção inválida. Tente novamente.")

@@ -1,6 +1,6 @@
 import sqlite3
 import pwinput
-from menur_vendedor import main
+from menur_vendedor import main_vend
 from menur_adm import main_adm
 from intro import *
 import time
@@ -8,6 +8,7 @@ import os
 import platform
 def limpar_tela():
     os.system('clear' if platform.system() == 'Linux' else 'cls')    
+
 class Login:
     def __init__(self):
         try:
@@ -49,7 +50,7 @@ class Login:
                         time.sleep(3)
                         limpar_tela()
                         iniciar_intro()
-                        main()
+                        main_vend()
                         # Abrir o main que está na pasta Sistema
                         # Substitua o comando abaixo pelo que você precisa para abrir o main
                         # Exemplo: subprocess.Popen(["python", "caminho/do/main.py"])
