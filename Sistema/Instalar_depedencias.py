@@ -43,7 +43,7 @@ def instalar_pacotes():
                 print(f"{vermelho}Erro ao instalar {pacote} no ambiente virtual.{reset}")
                 print(f"Erro: {e}")
 
-        print(f"Ambiente virtual criado. Considere ativá-lo com {amarelo}'source venv/bin/activate'.")
+        print(f"Ambiente virtual criado. Considere ativá-lo com {amarelo}'source venv/bin/activate'.{reset}")
         time.sleep(10)
         limpar_tela()
 
