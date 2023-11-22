@@ -3,7 +3,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from datetime import datetime
 from PIL import Image
-
+import  os
 class Venda:
     def __init__(self, conn, c):
         self.conn = conn
@@ -36,6 +36,9 @@ class Venda:
     def criar_nota_fiscal_pdf(self, total_venda, metodo_pagamento):
         # Obter a data e hora atual
         data_hora = datetime.now().strftime("%d-%m-%Y %H:%M")
+        
+        if not os.path.exists("Notas_Fiscais"):
+            os.makedirs("Notas_Fiscais")
 
         # Criar um arquivo PDF
         pdf = canvas.Canvas(f"Notas_Fiscais/Nota_Fiscal_{data_hora}.pdf", pagesize=letter)
@@ -87,6 +90,8 @@ class Venda:
 
         # Salvar o arquivo PDF
         pdf.save()
+        print("Verifique sua nota fiscal em (Notas_Fiscais)")
+        
 
     def realizar_venda(self):
         total_venda = 0
