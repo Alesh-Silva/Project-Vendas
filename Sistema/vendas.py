@@ -35,7 +35,7 @@ class Venda:
 
     def criar_nota_fiscal_pdf(self, total_venda, metodo_pagamento):
         # Obter a data e hora atual
-        data_hora = datetime.now().strftime("%d-%m-%Y %H:%M")
+        data_hora = datetime.now().strftime("%d-%m-%Y_%H-%M-%S")
         
         if not os.path.exists("Notas_Fiscais"):
             os.makedirs("Notas_Fiscais")
