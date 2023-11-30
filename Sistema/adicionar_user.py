@@ -2,7 +2,7 @@ import sqlite3
 import pwinput
 from datetime import datetime
 import time
-class DatabaseManager:
+class Adionar_user:
     def __init__(self):
         try:
             import sqlite3
@@ -51,7 +51,7 @@ class DatabaseManager:
             return id
 
 # Criar uma instância da classe DatabaseManager
-db_manager = DatabaseManager()
+db_manager_user = Adionar_user()
 
 # Exemplo de chamada da função
-#db_manager.adicionar_user()
+#db_manager_user.adicionar_user()

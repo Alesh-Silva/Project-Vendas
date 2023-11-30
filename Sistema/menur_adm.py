@@ -1,7 +1,8 @@
 '''antigo main - agora é menur vendedor'''
 from vendas import executar_vendas
 from listar_dados import buscar_produto
-from adicionar_prod import DatabaseManager
+from venda_avulsa import executar_vendas_avulsas
+from adicionar_prod import *
 from ADM_user import *
 from adicionar_user import *
 
@@ -21,17 +22,17 @@ def cabecalho():
     print("----- Sistema de Vendas -----")
     print(f"Data e Hora Atuais: {data_hora_str}")
     print("1. Realizar Venda")
-    print("2. Lista produtos cadastrados")
-    print("3. Cadastrar Produto")
-    print("4. Listar Funcionários e Modifcar User")
-    print("5. Cadastrar Novo Funcionário")
-    print("6. Sair")
+    print("2. Realizar Venda Avulsa")
+    print("3. Lista produtos cadastrados")
+    print("4. Cadastrar Produto")
+    print("5. Listar Funcionários e Modifcar User")
+    print("6. Cadastrar Novo Funcionário")
+    print("7. Sair")
 
 
 def main_adm():
     conn = sqlite3.connect('Database/store.db')
-    db_manager = DatabaseManager()
-    db_manager_adm = ADM_USER()
+   
 
     while True:
         cabecalho()
@@ -42,24 +43,28 @@ def main_adm():
             time.sleep(5)
             limpar_tela()
         elif opcao == '2':
+            executar_vendas_avulsas()
+            time.sleep(5)
+            limpar_tela()
+        elif opcao == '3':
             nome_produto = input("Digite o nome do produto que deseja pesquisar (pressione Enter para mostrar todos): ")
             buscar_produto(conn, nome_produto)  # Passa a conexão como argumento
-        elif opcao == '3':
+        elif opcao == '4':
             db_manager = DatabaseManager()  # Armazena a instância da classe em uma variável
             db_manager.create_product()  #
             time.sleep(5)
             limpar_tela()
-        elif opcao == '4':
+        elif opcao == '5':
             #db_manager_adm.listar_usuarios() # Lista todos os dados dos funcionários cadastradados
             db_manager_adm.modificar_usuario_interativo()
             time.sleep(5)
             limpar_tela()                
            
-        elif opcao == '5':
-            db_manager.adicionar_user()
+        elif opcao == '6':
+            db_manager_user.adicionar_user()
             time.sleep(5)
             limpar_tela()
-        elif opcao == '6':
+        elif opcao == '7':
             print("Saindo do sistema. Até mais!")
             time.sleep(3)
             from login import Login
