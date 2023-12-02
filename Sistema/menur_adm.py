@@ -5,6 +5,7 @@ from venda_avulsa import executar_vendas_avulsas
 from adicionar_prod import *
 from ADM_user import *
 from adicionar_user import *
+from modificar_produto import *
 
 import datetime
 import platform
@@ -25,14 +26,14 @@ def cabecalho():
     print("2. Realizar Venda Avulsa")
     print("3. Lista produtos cadastrados")
     print("4. Cadastrar Produto")
-    print("5. Listar Funcionários e Modifcar User")
-    print("6. Cadastrar Novo Funcionário")
-    print("7. Sair")
+    print("5. Modificar Produto")
+    print("6. Listar Funcionários e Modifcar User")
+    print("7. Cadastrar Novo Funcionário")
+    print("8. Sair")
 
 
 def main_adm():
-    conn = sqlite3.connect('Database/store.db')
-   
+    conn = sqlite3.connect('Database/store.db')   
 
     while True:
         cabecalho()
@@ -54,17 +55,23 @@ def main_adm():
             db_manager.create_product()  #
             time.sleep(5)
             limpar_tela()
+            
         elif opcao == '5':
+            modificador.modificar_produto_interativo()
+            time.sleep(5)
+            limpar_tela()
+            
+        elif opcao == '6':
             #db_manager_adm.listar_usuarios() # Lista todos os dados dos funcionários cadastradados
             db_manager_adm.modificar_usuario_interativo()
             time.sleep(5)
             limpar_tela()                
            
-        elif opcao == '6':
+        elif opcao == '7':
             db_manager_user.adicionar_user()
             time.sleep(5)
             limpar_tela()
-        elif opcao == '7':
+        elif opcao == '8':
             print("Saindo do sistema. Até mais!")
             time.sleep(3)
             from login import Login
